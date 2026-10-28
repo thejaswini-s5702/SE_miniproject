@@ -14,10 +14,10 @@ def create_app(test_config=None):
         app.config.update(test_config)
     os.makedirs(app.instance_path, exist_ok=True)
 
-    from . import auth, db, students
+    from . import auth, db, faculty, students
 
     db.init_app(app)
-    for module in [auth, students]:
+    for module in [auth, students, faculty]:
         app.register_blueprint(module.bp)
 
     @app.errorhandler(403)
