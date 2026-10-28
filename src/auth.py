@@ -60,4 +60,18 @@ def logout():
 @bp.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", user=g.user)
+
+
+def role_required(*roles):
+    """Allow only the given roles."""
+    def decorator(view):
+        @functools.wraps(view)
+        def wrapped(*args, **kwargs):
+            if g.user is None:
+                return redirect(url_for("auth.login"))
+            if g.user["role"] not in roles:
+                abort(403)
+            return view(*args, **kwargs)
+        return wrapped
+    return decorator

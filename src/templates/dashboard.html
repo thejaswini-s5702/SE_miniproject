@@ -3,5 +3,18 @@
 
 {% block content %}
 <h1>Dashboard</h1>
+
 <p>{{ g.user["username"] }} ({{ g.user["role"] }})</p>
+
+{% if g.user["role"] == "admin" %}
+    <h2>Admin dashboard</h2>
+{% elif g.user["role"] == "faculty" %}
+    <h2>Faculty dashboard</h2>
+{% elif g.user["role"] == "student" %}
+    <h2>Student dashboard</h2>
+{% endif %}
+
+<form method="post" action="{{ url_for('auth.logout') }}">
+    <button type="submit">Logout</button>
+</form>
 {% endblock %}

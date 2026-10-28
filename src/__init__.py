@@ -18,12 +18,20 @@ def create_app(test_config=None):
     from . import auth, db
 
     db.init_app(app)
+
     app.register_blueprint(auth.bp)
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template(
+            "error.html",
+            code=403,
+            message="You do not have permission to do that.",
+        ), 403
 
     @app.errorhandler(404)
     def not_found(error):
         return render_template(
             "error.html", code=404, message="Page not found."
         ), 404
-
     return app
