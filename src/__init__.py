@@ -1,3 +1,4 @@
+
 """SAMS application factory (presentation + application layers)."""
 import os
 
@@ -14,9 +15,10 @@ def create_app(test_config=None):
         app.config.update(test_config)
     os.makedirs(app.instance_path, exist_ok=True)
 
-    from . import db
+    from . import auth, db
 
     db.init_app(app)
+    app.register_blueprint(auth.bp)
 
     @app.errorhandler(404)
     def not_found(error):
