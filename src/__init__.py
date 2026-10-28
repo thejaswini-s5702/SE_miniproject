@@ -1,4 +1,3 @@
-
 """SAMS application factory (presentation + application layers)."""
 import os
 
@@ -15,10 +14,17 @@ def create_app(test_config=None):
         app.config.update(test_config)
     os.makedirs(app.instance_path, exist_ok=True)
 
-    from . import auth, db
+    from . import auth, db, students
 
     db.init_app(app)
-    app.register_blueprint(auth.bp)
+    for module in [auth, students]:
+        app.register_blueprint(module.bp)
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template(
+            "error.html", code=403, message="You do not have permission to do that."
+        ), 403
 
     @app.errorhandler(404)
     def not_found(error):
