@@ -12,6 +12,11 @@
   {% if g.user %}
     {% if g.user['role'] == 'admin' %}
       <a href="{{ url_for('students.index') }}">Students</a>
+      <a href="{{ url_for('faculty.index') }}">Faculty</a>
+      <a href="{{ url_for('subjects.index') }}">Subjects</a>
+    {% elif g.user['role'] == 'faculty' %}
+      <a href="{{ url_for('students.index') }}">Students</a>
+      <a href="{{ url_for('faculty.index') }}">Faculty</a>
     {% endif %}
     <span class="spacer"></span>
     <span class="who">{{ g.user['username'] }} ({{ g.user['role'] }})</span>
