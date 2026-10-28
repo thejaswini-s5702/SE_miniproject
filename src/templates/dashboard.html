@@ -1,7 +1,15 @@
-
 {% extends "base.html" %}
-
+{% block title %}Dashboard{% endblock %}
 {% block content %}
-<h1>Dashboard</h1>
-<p>{{ g.user["username"] }} ({{ g.user["role"] }})</p>
+{% set role = g.user['role'] %}
+<h1>{{ role|capitalize }} dashboard</h1>
+<div class="cards">
+  {% if role == 'admin' %}
+    <a class="card tile" href="{{ url_for('students.index') }}">Manage students</a>
+  {% elif role == 'faculty' %}
+    <div class="card tile muted">Record attendance (Sprint 2)</div>
+  {% else %}
+    <div class="card tile muted">View attendance and percentage (Sprint 2)</div>
+  {% endif %}
+</div>
 {% endblock %}
