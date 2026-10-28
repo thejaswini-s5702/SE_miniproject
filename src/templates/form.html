@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post" class="card narrow">
+  {% for f in fields %}
+    <label for="{{ f.name }}">{{ f.label }}</label>
+    {% if f.type == 'select' %}
+      <select id="{{ f.name }}" name="{{ f.name }}">
+        <option value="">-- none --</option>
+        {% for value, label in f.options %}
+          <option value="{{ value }}"
+            {% if values.get(f.name)|string == value|string %}selected{% endif %}>
+            {{ label }}
+          </option>
+        {% endfor %}
+      </select>
+    {% else %}
+      <input id="{{ f.name }}" name="{{ f.name }}" type="{{ f.type }}"
+             value="{{ '' if f.type == 'password' else values.get(f.name, '') }}"
+             required>
+    {% endif %}
+  {% endfor %}
+  <div class="actions">
+    <button type="submit">Save</button>
+    <a href="{{ cancel_url }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
