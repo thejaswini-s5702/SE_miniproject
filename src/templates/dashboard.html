@@ -12,9 +12,12 @@
         <a class="card tile" href="{{ url_for('students.index') }}">Manage students</a>
         <a class="card tile" href="{{ url_for('faculty.index') }}">Manage faculty</a>
         <a class="card tile" href="{{ url_for('subjects.index') }}">Manage subjects</a>
+
     {% elif role == 'faculty' %}
         <a class="card tile" href="{{ url_for('students.index') }}">View students</a>
+        <a class="card tile" href="{{ url_for('subjects.assigned') }}">My Assigned Subjects</a>
         <div class="card tile muted">Record attendance (Sprint 2)</div>
+
     {% else %}
         <div class="card tile muted">View attendance and percentage (Sprint 2)</div>
     {% endif %}
