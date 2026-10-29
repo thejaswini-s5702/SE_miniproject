@@ -1,7 +1,7 @@
 """Subject management component (SAMS-F-011)."""
 from sqlite3 import IntegrityError
 
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
 
 from .auth import role_required
 from .db import get_db
@@ -101,3 +101,26 @@ def edit(record_id):
     return render_template(
         "form.html", title="Edit subject", fields=fields, values=values,
         cancel_url=url_for("subjects.index"))
+
+
+@bp.route("/assigned")
+@role_required("faculty")
+def assigned():
+    """Show subjects assigned to the logged-in faculty member."""
+    rows = get_db().execute(
+        "SELECT s.code, s.name "
+        "FROM subjects s "
+        "JOIN faculty f ON f.id = s.faculty_id "
+        "WHERE f.user_id = ? "
+        "ORDER BY s.code",
+        (g.user["id"],),
+    ).fetchall()
+
+    return render_template(
+        "list.html",
+        title="My Assigned Subjects",
+        columns=[("code", "Subject Code"), ("name", "Subject Name")],
+        rows=rows,
+        add_url=None,
+        edit_endpoint=None,
+    )
