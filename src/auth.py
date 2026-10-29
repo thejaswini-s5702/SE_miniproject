@@ -3,15 +3,8 @@
 import functools
 
 from flask import (
-    Blueprint,
-    abort,
-    flash,
-    g,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
+    Blueprint, abort, flash, g, redirect, render_template,
+    request, session, url_for,
 )
 from werkzeug.security import check_password_hash
 
@@ -87,7 +80,6 @@ def login():
             session["user_id"] = user["id"]
             return redirect(url_for("auth.dashboard"))
 
-        # Use the same message for unknown users and incorrect passwords.
         flash("Invalid username or password.", "error")
         return render_template("login.html"), 401
 
@@ -103,4 +95,4 @@ def logout():
 @bp.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", user=g.user)

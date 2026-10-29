@@ -17,6 +17,7 @@ def create_app(test_config=None):
     from . import auth, db, faculty, students, subjects
 
     db.init_app(app)
+
     for module in [auth, students, faculty, subjects]:
         app.register_blueprint(module.bp)
 
@@ -31,5 +32,4 @@ def create_app(test_config=None):
         return render_template(
             "error.html", code=404, message="Page not found."
         ), 404
-
     return app
