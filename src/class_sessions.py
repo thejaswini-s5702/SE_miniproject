@@ -69,6 +69,7 @@ def index():
                  ("topic", "Topic")],
         rows=rows, add_url=url_for("class_sessions.add"),
         edit_endpoint="class_sessions.edit",
+        extra_links=[("Attendance", "attendance.record")],
     )
 
 
