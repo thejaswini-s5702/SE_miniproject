@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p>
+  {{ class_session['subject_code'] }} - {{ class_session['subject_name'] }}
+  | {{ class_session['session_date'] }}
+  {% if class_session['topic'] %}| {{ class_session['topic'] }}{% endif %}
+</p>
+<form method="post">
+  <div class="scroll">
+  <table>
+    <thead>
+      <tr><th>SRN</th><th>Name</th><th>Present</th><th>Absent</th></tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td>{{ s['roll_no'] }}</td>
+        <td>{{ s['name'] }}</td>
+        <td><input type="radio" name="status_{{ s['id'] }}" value="present"
+            {% if current.get(s['id'], 'present') == 'present' %}checked{% endif %}></td>
+        <td><input type="radio" name="status_{{ s['id'] }}" value="absent"
+            {% if current.get(s['id']) == 'absent' %}checked{% endif %}></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="actions">
+    <button type="submit">Save attendance</button>
+    <a href="{{ cancel_url }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

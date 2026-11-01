@@ -5,12 +5,14 @@
   <h1>{{ title }}</h1>
   {% if add_url %}<a class="btn" href="{{ add_url }}">+ Add</a>{% endif %}
 </div>
+{% set extras = extra_links or [] %}
 <div class="scroll">
 <table>
   <thead>
     <tr>
       {% for key, label in columns %}<th>{{ label }}</th>{% endfor %}
       {% if edit_endpoint %}<th></th>{% endif %}
+      {% for label, endpoint in extras %}<th></th>{% endfor %}
     </tr>
   </thead>
   <tbody>
@@ -22,9 +24,12 @@
       {% if edit_endpoint %}
         <td><a href="{{ url_for(edit_endpoint, record_id=row['id']) }}">Edit</a></td>
       {% endif %}
+      {% for label, endpoint in extras %}
+        <td><a href="{{ url_for(endpoint, record_id=row['id']) }}">{{ label }}</a></td>
+      {% endfor %}
     </tr>
     {% else %}
-    <tr><td colspan="{{ columns|length + 1 }}">No records yet.</td></tr>
+    <tr><td colspan="{{ columns|length + 1 + extras|length }}">No records yet.</td></tr>
     {% endfor %}
   </tbody>
 </table>
