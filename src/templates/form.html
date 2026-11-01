@@ -18,7 +18,7 @@
     {% else %}
       <input id="{{ f.name }}" name="{{ f.name }}" type="{{ f.type }}"
              value="{{ '' if f.type == 'password' else values.get(f.name, '') }}"
-             required>
+             {% if not f.optional %}required{% endif %}>
     {% endif %}
   {% endfor %}
   <div class="actions">
