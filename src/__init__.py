@@ -14,11 +14,10 @@ def create_app(test_config=None):
         app.config.update(test_config)
     os.makedirs(app.instance_path, exist_ok=True)
 
-    from . import auth, db, faculty, students, subjects
+    from . import auth, class_sessions, db, faculty, students, subjects
 
     db.init_app(app)
-
-    for module in [auth, students, faculty, subjects]:
+    for module in [auth, students, faculty, subjects, class_sessions]:
         app.register_blueprint(module.bp)
 
     @app.errorhandler(403)
@@ -32,4 +31,5 @@ def create_app(test_config=None):
         return render_template(
             "error.html", code=404, message="Page not found."
         ), 404
+
     return app

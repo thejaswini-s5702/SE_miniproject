@@ -1,7 +1,17 @@
-"""Shared helpers (validation and account creation)."""
+"""Shared helpers (validation, account creation, percentages)."""
+from datetime import datetime
+
 from werkzeug.security import generate_password_hash
 
 MIN_PASSWORD_LENGTH = 6
+
+
+def valid_date(value):
+    try:
+        datetime.strptime(value, "%Y-%m-%d")
+    except ValueError:
+        return False
+    return True
 
 
 def validate(values, fields):
@@ -12,9 +22,12 @@ def validate(values, fields):
             continue
         value = values.get(field["name"], "").strip()
         if not value:
-            errors.append(f"{field['label']} is required.")
+            if not field.get("optional"):
+                errors.append(f"{field['label']} is required.")
         elif field["type"] == "number" and not value.isdigit():
             errors.append(f"{field['label']} must be a number.")
+        elif field["type"] == "date" and not valid_date(value):
+            errors.append(f"{field['label']} must be a valid date (YYYY-MM-DD).")
         elif field["type"] == "password" and len(value) < MIN_PASSWORD_LENGTH:
             errors.append(
                 f"{field['label']} must be at least {MIN_PASSWORD_LENGTH} characters."
