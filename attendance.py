@@ -1,4 +1,4 @@
-"""Attendance component (SAMS-F-014 to F-016)."""
+"""Attendance component (SAMS-F-014 to F-017)."""
 from sqlite3 import IntegrityError
 
 from flask import (Blueprint, abort, flash, g, redirect, render_template,
@@ -127,3 +127,39 @@ def summary(record_id):
         columns=[("roll_no", "SRN"), ("name", "Name"), ("present", "Present"),
                  ("total", "Classes"), ("percentage", "Attendance %")],
         rows=rows)
+
+
+@bp.route("/my-attendance")
+@role_required("student")  # F-017 / SR-005: a student only ever sees their own records
+def mine():
+    db = get_db()
+    student = db.execute(
+        "SELECT id, roll_no, name FROM students WHERE user_id = ?", (g.user["id"],)
+    ).fetchone()
+    if student is None:
+        abort(404)
+    per_subject = db.execute(
+        "SELECT s.code, s.name, COUNT(a.id) AS total, "
+        "COALESCE(SUM(a.status = 'present'), 0) AS present "
+        "FROM attendance a "
+        "JOIN class_sessions cs ON cs.id = a.class_session_id "
+        "JOIN subjects s ON s.id = cs.subject_id "
+        "WHERE a.student_id = ? GROUP BY s.id ORDER BY s.code", (student["id"],)
+    ).fetchall()
+    subjects = [{
+        "code": r["code"], "name": r["name"], "present": r["present"],
+        "total": r["total"],
+        "percentage": calculate_percentage(r["present"], r["total"]),
+    } for r in per_subject]
+    present = sum(r["present"] for r in per_subject)
+    total = sum(r["total"] for r in per_subject)
+    history = db.execute(
+        "SELECT cs.session_date, s.code, cs.topic, a.status FROM attendance a "
+        "JOIN class_sessions cs ON cs.id = a.class_session_id "
+        "JOIN subjects s ON s.id = cs.subject_id "
+        "WHERE a.student_id = ? ORDER BY cs.session_date DESC, cs.id DESC",
+        (student["id"],)
+    ).fetchall()
+    return render_template(
+        "attendance_student.html", student=student, subjects=subjects,
+        history=history, overall=calculate_percentage(present, total), total=total)

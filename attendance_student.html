@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}My attendance{% endblock %}
+{% block content %}
+<h1>My attendance</h1>
+<p>{{ student['name'] }} ({{ student['roll_no'] }})</p>
+{% if total == 0 %}
+  <p>No attendance recorded yet.</p>
+{% else %}
+  <div class="card narrow"><strong>Overall attendance: {{ overall }}%</strong></div>
+  <h2>By subject</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Subject</th><th>Present</th><th>Classes</th><th>Attendance %</th></tr></thead>
+    <tbody>
+      {% for s in subjects %}
+      <tr>
+        <td>{{ s['code'] }} - {{ s['name'] }}</td>
+        <td>{{ s['present'] }}</td>
+        <td>{{ s['total'] }}</td>
+        <td>{{ s['percentage'] }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <h2>History</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Date</th><th>Subject</th><th>Topic</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for h in history %}
+      <tr>
+        <td>{{ h['session_date'] }}</td>
+        <td>{{ h['code'] }}</td>
+        <td>{{ h['topic'] if h['topic'] else '-' }}</td>
+        <td>{{ h['status']|capitalize }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% endif %}
+{% endblock %}
