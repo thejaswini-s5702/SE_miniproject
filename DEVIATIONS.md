@@ -13,6 +13,11 @@ These will be explained during the final demo.
 | 6 | SAD 4.6 (data design) | Faculty-Subject Mapping entity | Stored as `faculty_id` on `subjects` (one faculty per subject) | Simpler schema; sufficient for F-012 |
 | 7 | Sprint plan | Sprint 1: 19-23 Oct | Sprint 1 work started late (TODO: add actual dates) | Backlog and setup completed late |
 | 8 | Team | 4 members | TODO: list who contributed, if fewer than 4 | |
+| 9 | SRS F-015 | Faculty (and administration) modify attendance | Only the faculty member who owns the subject can modify attendance; admins cannot | Keeps the rule simple and secure; admin edits are not in the acceptance criteria |
+| 10 | SRS NFR-001 to NFR-003 | 3 s response, 100 concurrent users, 99% availability | Not load-tested; checked manually on one laptop | Time limit; no load-testing tool set up |
+| 11 | SRS 4.4 / 4.5 | Attendance recorded per class session | Every student appears in every class session (no student-subject enrollment table) | The SRS and SAD define no enrollment entity |
+| 12 | SRS F-016 | Percentage of attended classes out of total conducted | Percentage = present / sessions with recorded attendance, per subject and overall | Defined in code so it is testable |
+| 13 | Sprint plan | Sprint 2: 26-30 Oct | TODO: add actual Sprint 2 dates | |
 
 ## Known limitations (not in the SRS)
 - No CSRF tokens on forms.
