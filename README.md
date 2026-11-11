@@ -72,14 +72,14 @@ python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-# 3. Create the database (adds admin / admin123) and optional demo data
-flask --app src init-db
-flask --app src seed-demo        # faculty1/faculty123, student1/student123
+# 3. Run the app and open http://localhost:8501
+streamlit run streamlit_app.py
 
-# 4. Run the app, then open http://127.0.0.1:5000
-flask --app src run --debug
+# The database and default admin account (admin / admin123) are created on first run.
+# Optional demo accounts: faculty1/faculty123 and student1/student123
+flask --app src seed-demo
 
-# 5. Run the tests
+# 4. Run the tests
 pytest
 ```
 
